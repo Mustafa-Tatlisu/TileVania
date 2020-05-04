@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -23,14 +24,23 @@ public class Player : MonoBehaviour
     BoxCollider2D playerFeet;
     float previousGravityScale;
 
+    public int maxHealth = 100;
+    public int currentHealth;
+
+    [SerializeField] public HealthBar healthBar;
+
     void Start()
     {
+        // healthBar = gameObject.AddComponent<HealthBar>();
+        healthBar = GameObject.Find("Health Bar").GetComponent<HealthBar>();
+        healthBar.SetMaxHealth(100);
+        //healthBar.SetHealth(30);
         rigidbody = GetComponent<Rigidbody2D>();
         animatorComponent = GetComponent<Animator>();
         spriteComponent = GetComponent<SpriteRenderer>();
         bodyCollider = GetComponent<CapsuleCollider2D>();
         previousGravityScale = rigidbody.gravityScale;
-        HealthText.text = health.ToString();
+        //HealthText.text = health.ToString();
         playerFeet = GetComponent<BoxCollider2D>();
     }
     // Update is called once per frame
@@ -41,6 +51,7 @@ public class Player : MonoBehaviour
         Jump();
         ClimbLadder();
         CheckIfTouchingGround();
+        healthBar.changeHealth(-1);
     }
 
     void Run()
@@ -78,7 +89,7 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        //if (!playerFeet.IsTouchingLayers(LayerMask.GetMask("Ground"))) { return; }
+       //if (!playerFeet.IsTouchingLayers(LayerMask.GetMask("Ground"))) { return; }
         if (CrossPlatformInputManager.GetButtonDown("Jump"))
         {
             if(jumpcount == 0)
